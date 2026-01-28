@@ -1,23 +1,34 @@
+/* pages/welcome/welcome.wxss */
 .container {
-  padding: 100rpx 50rpx;
+  height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  background: linear-gradient(135deg, #07c160 0%, #05a050 100%);
 }
 
-.logo {
-  width: 200rpx;
-  height: 200rpx;
-  margin-bottom: 60rpx;
+.welcome-section {
+  text-align: center;
+  padding: 60rpx;
+  background: white;
+  border-radius: 24rpx;
+  margin: 40rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.1);
 }
 
-.title {
-  font-size: 36rpx;
+.welcome-title {
+  display: block;
+  font-size: 40rpx;
   font-weight: bold;
-  margin-bottom: 80rpx;
   color: #333;
+  margin-bottom: 20rpx;
+}
+
+.welcome-subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 60rpx;
 }
 
 .input-section {
@@ -27,14 +38,24 @@
 .name-input {
   width: 100%;
   height: 80rpx;
-  border: 2rpx solid #ddd;
-  border-radius: 16rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
   padding: 0 20rpx;
-  margin-bottom: 40rpx;
   font-size: 28rpx;
+  margin-bottom: 40rpx;
+  box-sizing: border-box;
 }
 
 .enter-btn {
   width: 100%;
-  background-color: #28a745;
+  height: 88rpx;
+  background: #07c160;
+  color: white;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.enter-btn[disabled] {
+  background: #ccc;
 }

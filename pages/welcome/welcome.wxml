@@ -1,22 +1,22 @@
+<!--pages/welcome/welcome.wxml-->
 <view class="container">
-  <image src="/images/logo.png" class="logo"></image>
-  <view class="title">欢迎使用膳食健康助手</view>
-  
-  <view class="input-section">
-    <input 
-      type="text" 
-      placeholder="请输入您的姓名" 
-      bindinput="onNameInput"
-      value="{{userName}}"
-      class="name-input"
-    />
-    <button 
-      type="primary" 
-      bindtap="enterApp" 
-      disabled="{{!userName}}"
-      class="enter-btn"
-    >
-      开始使用
-    </button>
+  <view class="welcome-section">
+    <text class="welcome-title">欢迎使用膳食健康助手</text>
+    <text class="welcome-subtitle">开启您的健康饮食之旅</text>
+    
+    <view class="input-section">
+      <input 
+        class="name-input"
+        placeholder="请输入您的姓名"
+        bindinput="onNameInput"
+        value="{{userName}}"
+        maxlength="10"
+      />
+      <button 
+        class="enter-btn"
+        bindtap="enterApp"
+        disabled="{{!userName}}"
+      >开始使用</button>
+    </view>
   </view>
 </view>

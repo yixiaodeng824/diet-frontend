@@ -1,26 +1,31 @@
 {
   "pages": [
-    "pages/welcome/welcome", 
-    "pages/index/index",  
-    "pages/profile/profile"  
+    "pages/welcome/welcome",
+    "pages/index/index",
+    "pages/profile/profile",
+    "pages/analysis/analysis",
+    "pages/recommendation/recommendation"
   ],
   "window": {
     "navigationBarTitleText": "膳食健康助手",
-    "navigationBarBackgroundColor": "#28a745"
+    "navigationBarBackgroundColor": "#07c160",
+    "navigationBarTextStyle": "white"
   },
   "tabBar": {
     "color": "#7f8c8d",
-    "selectedColor": "#28a745",
-    "backgroundColor": "#ffffff",
-    "borderStyle": "black",
+    "selectedColor": "#07c160",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "🏠 健康首页"
+        "text": "首页",
+        "iconPath": "/images/home.png",
+        "selectedIconPath": "/images/home-active.png"
       },
       {
-        "pagePath": "pages/profile/profile", 
-        "text": "👤 个人中心"
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "/images/profile.png",
+        "selectedIconPath": "/images/profile-active.png"
       }
     ]
   }

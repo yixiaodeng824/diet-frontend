@@ -1,21 +1,21 @@
 // app.js
 App({
   onLaunch() {
-    // 小程序启动时，尝试从本地缓存读取用户信息
+    // 小程序启动时从本地缓存读取用户信息
     const userInfo = wx.getStorageSync('userInfo');
     if (userInfo) {
       this.globalData.userInfo = userInfo;
     }
   },
 
-  // 全局数据，所有页面都可以访问
+  // 全局数据
   globalData: {
-    userInfo: null // 存储用户信息 {name, height, weight, goal}
+    userInfo: null
   },
 
-  // 保存用户信息到全局数据和本地缓存
+  // 保存用户信息方法
   saveUserInfo(userInfo) {
     this.globalData.userInfo = userInfo;
-    wx.setStorageSync('userInfo', userInfo); // 持久化存储
+    wx.setStorageSync('userInfo', userInfo);
   }
 })

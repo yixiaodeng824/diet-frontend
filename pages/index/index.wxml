@@ -1,30 +1,36 @@
+<!--pages/index/index.wxml-->
 <view class="container">
-  <view class="user-greeting">你好，{{userInfo.name}}！</view>
-  
-  <view class="card" bindtap="goToAnalysis">
-    <text class="card-icon">📷</text>
-    <view class="card-content">
-      <view class="card-title">拍照计算卡路里</view>
-      <view class="card-desc">AI识别食材，分析营养成分</view>
-</view>
-<text class="arrow">→</text>
+  <view class="header">
+    <text class="greeting">你好，{{userInfo ? userInfo.name : '朋友'}}！</text>
+    <text class="subtitle">今天想吃什么？</text>
   </view>
 
-  <view class="card" bindtap="goToRecommendation">
-    <image src="/images/recommend.png" class="card-icon"></image>
-    <view class="card-content">
-      <view class="card-title">个性化饮食推荐</view>
-      <view class="card-desc" wx:if="{{userInfo.goal}}">
-        根据您的{{goalText}}目标推荐
+  <view class="function-cards">
+    <view class="card" bindtap="goToAnalysis">
+      <view class="card-icon">📷</view>
+      <view class="card-content">
+        <text class="card-title">拍照计算卡路里</text>
+        <text class="card-desc">AI识别食材，分析营养成分</text>
       </view>
-      <view class="card-desc" wx:else>
-        请先完善个人信息
-      </view>
+      <view class="card-arrow">→</view>
     </view>
-    <image src="/images/arrow.png" class="arrow"></image>
+
+    <view class="card" bindtap="goToRecommendation">
+      <view class="card-icon">🍽️</view>
+      <view class="card-content">
+        <text class="card-title">个性化饮食推荐</text>
+        <text class="card-desc" wx:if="{{userInfo && userInfo.goal}}">
+          根据您的{{userInfo.goal === 'gain' ? '增肌' : userInfo.goal === 'lose' ? '减脂' : '健康维持'}}目标推荐
+        </text>
+        <text class="card-desc" wx:else>
+          请先完善个人信息
+        </text>
+      </view>
+      <view class="card-arrow">→</view>
+    </view>
   </view>
 
-  <view class="tip" wx:if="{{!userInfo.goal}}">
-    💡 请先完善身高体重信息，获得更精准的推荐
+  <view class="tip" wx:if="{{!userInfo || !userInfo.goal}}">
+    💡 完善个人信息，获得更精准的健康建议
   </view>
 </view>

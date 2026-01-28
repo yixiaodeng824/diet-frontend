@@ -1,117 +1,133 @@
-/* pages/profile/profile.wxss *//* pages/profile/profile.wxss */
-page {
-  background-color: #f8f9fa;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+/* pages/profile/profile.wxss */
+.profile-page {
+  padding: 30rpx;
+  background: #f5f5f5;
+  min-height: 100vh;
 }
 
-/* 页面容器 */
-.profile-container {
-  padding: 0 24rpx 80rpx;
-  max-width: 750rpx;
-  margin: 0 auto;
+.section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
 }
 
-/* 页面标题区域 */
-.page-header {
-  padding: 48rpx 0 32rpx;
-  text-align: center;
-}
-
-.page-title {
-  display: block;
-  font-size: 40rpx;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 12rpx;
-}
-
-.page-subtitle {
-  display: block;
-  font-size: 26rpx;
-  color: #666;
-  opacity: 0.8;
-}
-
-/* 信息卡片通用样式 */
-.info-card {
-  background: #ffffff;
-  border-radius: 24rpx;
-  padding: 32rpx;
-  margin-bottom: 32rpx;
-  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.04);
-  border: 1rpx solid #f0f0f0;
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 32rpx;
-}
-
-.card-icon {
-  width: 48rpx;
-  height: 48rpx;
-  margin-right: 16rpx;
-}
-
-.card-title {
+.section-title {
   font-size: 32rpx;
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
-/* 输入框区域 */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
 }
 
 .input-item {
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 30rpx;
 }
 
-.input-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 24rpx;
-}
-
-.input-item.half {
-  flex: 1;
-}
-
-.input-label {
+.label {
+  display: block;
   font-size: 28rpx;
-  color: #333;
-  margin-bottom: 12rpx;
-  font-weight: 500;
+  color: #666;
+  margin-bottom: 10rpx;
 }
 
 .input-field {
-  height: 88rpx;
-  padding: 0 24rpx;
-  background: #f8f9fa;
+  width: 100%;
+  height: 80rpx;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+/* BMI显示区域样式 */
+.bmi-section {
+  background: white;
   border-radius: 16rpx;
-  font-size: 30rpx;
-  color: #1a1a1a;
-  border: 1rpx solid #e8e8e8;
-  transition: all 0.2s ease;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
 }
 
-.input-field:focus {
-  border-color: #07c160;
-  background: #fff;
+.bmi-header {
+  margin-bottom: 20rpx;
 }
 
-.name-input {
-  background: #f8f9fa;
+.bmi-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.bmi-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.bmi-value {
+  display: flex;
+  align-items: baseline;
+}
+
+.bmi-number {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #07c160;
+  margin-right: 10rpx;
+}
+
+.bmi-unit {
+  font-size: 24rpx;
   color: #999;
 }
 
-/* 健康目标选项 */
+.bmi-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-right: 15rpx;
+}
+
+.status-indicator {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+}
+
+.status-indicator.underweight {
+  background: #ff9500; /* 偏瘦 - 橙色 */
+}
+
+.status-indicator.normal {
+  background: #07c160; /* 正常 - 绿色 */
+}
+
+.status-indicator.overweight {
+  background: #ff6b35; /* 超重 - 橙红色 */
+}
+
+.status-indicator.obese {
+  background: #ff3b30; /* 肥胖 - 红色 */
+}
+
+.bmi-tip {
+  padding: 15rpx;
+  background: rgba(7, 193, 96, 0.05);
+  border-radius: 8rpx;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 健康目标选项样式 */
 .goal-options {
   display: flex;
   flex-direction: column;
@@ -121,112 +137,18 @@ page {
 .goal-item {
   display: flex;
   align-items: center;
-  padding: 28rpx 24rpx;
-  background: #f8f9fa;
-  border-radius: 20rpx;
-  border: 2rpx solid transparent;
-  transition: all 0.3s ease;
-  position: relative;
+  padding: 25rpx;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  transition: all 0.3s;
 }
 
 .goal-item.selected {
-  background: linear-gradient(135deg, rgba(7, 193, 96, 0.08), rgba(7, 193, 96, 0.04));
   border-color: #07c160;
-  transform: translateY(-2rpx);
+  background: rgba(7, 193, 96, 0.05);
 }
 
-.goal-icon {
-  margin-right: 20rpx;
-}
-
-.radio-icon {
-  width: 36rpx;
-  height: 36rpx;
-}
-
-.goal-content {
-  flex: 1;
-}
-
-.goal-title {
-  display: block;
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 6rpx;
-}
-
-.goal-desc {
-  display: block;
-  font-size: 24rpx;
-  color: #666;
-  opacity: 0.8;
-}
-
-.goal-illustration {
-  width: 56rpx;
-  height: 56rpx;
-  margin-left: 16rpx;
-  opacity: 0.9;
-}
-
-/* BMI卡片样式 */
-.bmi-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 24rpx;
-  padding: 40rpx 32rpx;
-  margin-bottom: 32rpx;
-  color: white;
-  box-shadow: 0 8rpx 32rpx rgba(102, 126, 234, 0.2);
-}
-
-.bmi-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24rpx;
-}
-
-.bmi-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  opacity: 0.95;
-}
-
-.bmi-value {
-  font-size: 56rpx;
-  font-weight: 700;
-  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
-}
-
-.bmi-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
-}
-
-.bmi-status {
-  font-size: 28rpx;
-  opacity: 0.9;
-  font-weight: 500;
-}
-
-.bmi-progress {
-  margin-top: 8rpx;
-}
-
-.progress-bar {
-  height: 16rpx;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 8rpx;
-  overflow: hidden;
-  margin-bottom: 12rpx;
-}
-
-.progress-fill {
-  height: 100%;
-}
-/* 在 index.wxss 和 profile.wxss 中都需要添加 */
-.container {
-  padding-bottom: 100rpx; /* 为底部导航留出空间 */
+.goal-check {
+  width: 40rpx;
+  height: 40r
 }
