@@ -1,0 +1,116 @@
+/* 页面容器样式 */
+.container {
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* 标题 */
+.title {
+  font-size: 38rpx;
+  font-weight: bold;
+  margin: 40rpx 0;
+  color: #2c3e50;
+}
+
+/* 按钮区域 */
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.btn {
+  width: 400rpx;
+  margin-bottom: 20rpx;
+}
+
+.tip {
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+/* 图片预览 */
+.image-preview {
+  margin: 20rpx 0;
+}
+.preview-image {
+  width: 600rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 加载状态 */
+.loading {
+  padding: 40rpx;
+  font-size: 28rpx;
+  color: #e67e22;
+}
+
+/* 结果区域 */
+.result-section {
+  width: 100%;
+  margin-top: 40rpx;
+  padding: 30rpx;
+  background-color: white;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+}
+
+.result-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  color: #27ae60;
+  text-align: center;
+}
+
+.sub-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin: 20rpx 0 10rpx 0;
+  color: #2c3e50;
+}
+
+.food-item {
+  background-color: #e8f4fd;
+  padding: 10rpx 20rpx;
+  margin: 10rpx;
+  border-radius: 8rpx;
+  display: inline-block;
+}
+
+.nutrition-item {
+  border-bottom: 1rpx solid #eee;
+  padding: 20rpx 0;
+}
+.food-name {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.suggestion {
+  margin-top: 30rpx;
+  padding: 20rpx;
+  background-color: #fff9e6;
+  border-radius: 8rpx;
+}
+/* pages/index/index.wxss */
+.card-icon {
+  font-size: 60rpx; /* 调整Emoji图标大小 */
+  margin-right: 20rpx;
+}
+
+.arrow {
+  font-size: 36rpx;
+  color: #999;
+}
+/* 在 index.wxss 和 profile.wxss 中都需要添加 */
+.container {
+  padding-bottom: 100rpx; /* 为底部导航留出空间 */
+}

@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="header">
+    <text class="title">个性化饮食推荐</text>
+    <text class="subtitle">根据您的{{goalText}}目标定制</text>
+  </view>
+
+  <view class="recommendation-card">
+    <image src="/images/ai.png" class="ai-icon"></image>
+    <text class="card-title">AI营养师建议</text>
+    
+    <view class="recommendation-content">
+      <text>{{recommendation}}</text>
+    </view>
+  </view>
+
+  <button type="primary" bindtap="generateRecommendation" class="generate-btn">
+    {{recommendation ? '重新生成' : '生成推荐'}}
+  </button>
+</view>

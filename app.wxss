@@ -1,0 +1,45 @@
+/* 引入字体图标 */
+@font-face {
+  font-family: 'iconfont';
+  src: url('https://at.alicdn.com/t/font_1234567_abcde.css') format('woff2');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 20px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 自定义底部导航样式 */
+.custom-tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  display: flex;
+  background: #ffffff;
+  border-top: 1rpx solid #eeeeee;
+  z-index: 999;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+.tab-item.active {
+  color: #28a745;
+}
+
+.tab-text {
+  margin-top: 8rpx;
+  font-size: 20rpx;
+}

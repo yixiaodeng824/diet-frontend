@@ -1,0 +1,27 @@
+{
+  "pages": [
+    "pages/welcome/welcome", 
+    "pages/index/index",  
+    "pages/profile/profile"  
+  ],
+  "window": {
+    "navigationBarTitleText": "膳食健康助手",
+    "navigationBarBackgroundColor": "#28a745"
+  },
+  "tabBar": {
+    "color": "#7f8c8d",
+    "selectedColor": "#28a745",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "🏠 健康首页"
+      },
+      {
+        "pagePath": "pages/profile/profile", 
+        "text": "👤 个人中心"
+      }
+    ]
+  }
+}

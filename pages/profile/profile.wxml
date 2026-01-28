@@ -1,0 +1,169 @@
+<!-- pages/profile/profile.wxml -->
+<view class="profile-container">
+  
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">个人健康档案</text>
+    <text class="page-subtitle">完善信息获取精准推荐</text>
+  </view>
+
+  <!-- 基本信息卡片 -->
+  <view class="info-card">
+    <view class="card-header">
+      <image src="/images/user-icon.png" class="card-icon"></image>
+      <text class="card-title">基本信息</text>
+    </view>
+    
+    <view class="input-group">
+      <view class="input-item">
+        <text class="input-label">姓名</text>
+        <input 
+          type="text" 
+          value="{{userInfo.name}}" 
+          disabled 
+          class="input-field name-input" 
+          placeholder="请输入姓名"
+        />
+      </view>
+
+      <view class="input-row">
+        <view class="input-item half">
+          <text class="input-label">身高 (cm)</text>
+          <input 
+            type="digit" 
+            placeholder="请输入身高" 
+            value="{{userInfo.height}}" 
+            bindinput="onHeightInput" 
+            class="input-field"
+          />
+        </view>
+
+        <view class="input-item half">
+          <text class="input-label">体重 (kg)</text>
+          <input 
+            type="digit" 
+            placeholder="请输入体重" 
+            value="{{userInfo.weight}}" 
+            bindinput="onWeightInput" 
+            class="input-field"
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 健康目标卡片 -->
+  <view class="info-card">
+    <view class="card-header">
+      <image src="/images/target-icon.png" class="card-icon"></image>
+      <text class="card-title">健康目标</text>
+    </view>
+    
+    <view class="goal-options">
+      <view 
+        class="goal-item {{userInfo.goal === 'gain' ? 'selected' : ''}}" 
+        bindtap="selectGoal" 
+        data-goal="gain"
+      >
+        <view class="goal-icon">
+          <image 
+            src="{{userInfo.goal === 'gain' ? '/images/selected.png' : '/images/unselected.png'}}" 
+            class="radio-icon"
+          ></image>
+        </view>
+        <view class="goal-content">
+          <text class="goal-title">增肌增重</text>
+          <text class="goal-desc">增加肌肉质量，增强体质</text>
+        </view>
+        <image 
+          src="/images/muscle.png" 
+          class="goal-illustration" 
+          wx:if="{{userInfo.goal === 'gain'}}"
+        ></image>
+      </view>
+
+      <view 
+        class="goal-item {{userInfo.goal === 'lose' ? 'selected' : ''}}" 
+        bindtap="selectGoal" 
+        data-goal="lose"
+      >
+        <view class="goal-icon">
+          <image 
+            src="{{userInfo.goal === 'lose' ? '/images/selected.png' : '/images/unselected.png'}}" 
+            class="radio-icon"
+          ></image>
+        </view>
+        <view class="goal-content">
+          <text class="goal-title">减脂瘦身</text>
+          <text class="goal-desc">减少体脂肪，塑造线条</text>
+        </view>
+        <image 
+          src="/images/weight-loss.png" 
+          class="goal-illustration" 
+          wx:if="{{userInfo.goal === 'lose'}}"
+        ></image>
+      </view>
+
+      <view 
+        class="goal-item {{userInfo.goal === 'maintain' ? 'selected' : ''}}" 
+        bindtap="selectGoal" 
+        data-goal="maintain"
+      >
+        <view class="goal-icon">
+          <image 
+            src="{{userInfo.goal === 'maintain' ? '/images/selected.png' : '/images/unselected.png'}}" 
+            class="radio-icon"
+          ></image>
+        </view>
+        <view class="goal-content">
+          <text class="goal-title">健康维持</text>
+          <text class="goal-desc">保持现状，均衡营养</text>
+        </view>
+        <image 
+          src="/images/health.png" 
+          class="goal-illustration" 
+          wx:if="{{userInfo.goal === 'maintain'}}"
+        ></image>
+      </view>
+    </view>
+  </view>
+
+  <!-- BMI结果显示卡片 -->
+  <view class="bmi-card" wx:if="{{bmi}}">
+    <view class="bmi-header">
+      <text class="bmi-title">📊 健康评估</text>
+      <view class="bmi-value">{{bmi}}</view>
+    </view>
+    <view class="bmi-content">
+      <text class="bmi-status">{{bmiStatus}}</text>
+      <view class="bmi-progress">
+        <view class="progress-bar">
+          <view 
+            class="progress-fill" 
+            style="width: {{calculateProgressWidth(bmi)}}"
+          ></view>
+        </view>
+        <view class="progress-labels">
+          <text>偏瘦</text>
+          <text>正常</text>
+          <text>超重</text>
+          <text>肥胖</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="action-section">
+    <button 
+      type="primary" 
+      bindtap="saveProfile" 
+      class="save-button"
+      hover-class="button-hover"
+    >
+      保存健康信息
+    </button>
+    <text class="action-tip">信息将用于个性化饮食推荐</text>
+  </view>
+
+</view>

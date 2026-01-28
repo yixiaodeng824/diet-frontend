@@ -1,0 +1,22 @@
+<view class="container">
+  <image src="/images/logo.png" class="logo"></image>
+  <view class="title">欢迎使用膳食健康助手</view>
+  
+  <view class="input-section">
+    <input 
+      type="text" 
+      placeholder="请输入您的姓名" 
+      bindinput="onNameInput"
+      value="{{userName}}"
+      class="name-input"
+    />
+    <button 
+      type="primary" 
+      bindtap="enterApp" 
+      disabled="{{!userName}}"
+      class="enter-btn"
+    >
+      开始使用
+    </button>
+  </view>
+</view>
