@@ -5,7 +5,11 @@ Page({
       name: '',
       height: '',
       weight: '',
-      goal: ''
+      goal: '',
+      bmi: '',
+      bmiStatus: '',
+      bmiLevel: '',
+      recommendedGoalText: ''
     },
     bmi: '',
     bmiStatus: '',
@@ -94,29 +98,55 @@ Page({
       bmiStatus: status,
       bmiLevel: level
     });
+    this.updateRecommendedGoalText();
   },
 
-  // 获取推荐目标（根据BMI）
-  getRecommendedGoal() {
-    const level = this.data.bmiLevel;
-    
-    switch(level) {
-      case 'underweight': // 偏瘦 → 推荐增肌
-        return 'gain';
-      case 'overweight': // 超重 → 推荐减脂
-      case 'obese': // 肥胖 → 推荐减脂
-        return 'lose';
-      case 'normal': // 正常 → 推荐维持
-      default:
-        return 'maintain';
-    }
-  },
-
-  // 检查是否为推荐目标
-  isRecommendedGoal(goal) {
+  updateRecommendedGoalText() {
     const recommendedGoal = this.getRecommendedGoal();
-    return goal === recommendedGoal;
+    let goalText = '健康维持';
+    
+    if (recommendedGoal === 'gain') {
+      goalText = '增肌增重';
+    } else if (recommendedGoal === 'lose') {
+      goalText = '减脂瘦身';
+    }
+    
+    this.setData({
+      recommendedGoalText: goalText
+    });
   },
+
+ // 获取推荐目标（根据BMI）- 修正版本
+getRecommendedGoal() {
+  const level = this.data.bmiLevel;
+  console.log('计算推荐目标，当前等级:', level);
+  
+  if (!level) {
+    console.log('没有BMI等级，返回默认维持');
+    return 'maintain';
+  }
+  
+  if (level === 'underweight') {
+    console.log('偏瘦，推荐增肌');
+    return 'gain';
+  } else if (level === 'overweight' || level === 'obese') {
+    console.log('超重/肥胖，推荐减脂');
+    return 'lose';  // 这里应该是 lose，不是 maintain
+  } else if (level === 'normal') {
+    console.log('正常，推荐维持');
+    return 'maintain';
+  } else {
+    console.log('未知等级，默认维持');
+    return 'maintain';
+  }
+},
+
+// 检查是否为推荐目标
+isRecommendedGoal(goal) {
+  const recommendedGoal = this.getRecommendedGoal();
+  console.log('当前BMI等级:', this.data.bmiLevel, '推荐目标:', recommendedGoal, '检查目标:', goal);
+  return goal === recommendedGoal;
+},
 
   saveProfile() {
     const userInfo = this.data.userInfo;

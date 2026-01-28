@@ -79,16 +79,13 @@
     
     <!-- 推荐说明 -->
     <view class="recommend-tip" wx:if="{{bmi}}">
-      <text class="tip-icon">💡</text>
-      <text class="tip-text">
-        根据您的BMI {{bmi}} ({{bmiStatus}})，系统推荐您选择
-        <text class="highlight">
-          {{getRecommendedGoal() === 'gain' ? '增肌增重' : 
-            getRecommendedGoal() === 'lose' ? '减脂瘦身' : '健康维持'}}
-        </text>
-        目标
-      </text>
-    </view>
+  <text class="tip-icon">💡</text>
+  <text class="tip-text">
+    根据您的BMI {{bmi}} ({{bmiStatus}})，系统推荐您选择
+    <text class="highlight">{{recommendedGoalText}}</text>
+    目标
+  </text>
+  </view>
   </view>
 
   <view class="action-section">
