@@ -1,94 +1,94 @@
-<!--pages/profile/profile.wxml-->
-<view class="profile-page">
-  <view class="section">
-    <view class="section-title">基本信息</view>
-    <view class="input-item">
-      <text class="label">姓名</text>
-      <input class="input-field" value="{{userInfo.name}}" disabled placeholder="请输入姓名"/>
-    </view>
-    <view class="input-item">
-      <text class="label">身高(cm)</text>
-      <input class="input-field" type="digit" value="{{userInfo.height}}" 
-             bindinput="onHeightInput" placeholder="请输入身高"/>
-    </view>
-    <view class="input-item">
-      <text class="label">体重(kg)</text>
-      <input class="input-field" type="digit" value="{{userInfo.weight}}" 
-             bindinput="onWeightInput" placeholder="请输入体重"/>
-    </view>
-  </view>
-
-  <!-- BMI显示区域 -->
-  <view class="bmi-section" wx:if="{{bmi}}">
-    <view class="bmi-header">
-      <text class="bmi-title">BMI计算结果</text>
-    </view>
-    <view class="bmi-content">
-      <view class="bmi-value">
-        <text class="bmi-number">{{bmi}}</text>
-        <text class="bmi-unit">kg/m²</text>
+  <!--pages/profile/profile.wxml-->
+  <view class="profile-page">
+    <view class="section">
+      <view class="section-title">基本信息</view>
+      <view class="input-item">
+        <text class="label">姓名</text>
+        <input class="input-field" value="{{userInfo.name}}" disabled placeholder="请输入姓名"/>
       </view>
-      <view class="bmi-status">
-        <text class="status-text">{{bmiStatus}}</text>
-        <view class="status-indicator {{bmiLevel}}"></view>
+      <view class="input-item">
+        <text class="label">身高(cm)</text>
+        <input class="input-field" type="digit" value="{{userInfo.height}}" 
+              bindinput="onHeightInput" placeholder="请输入身高"/>
+      </view>
+      <view class="input-item">
+        <text class="label">体重(kg)</text>
+        <input class="input-field" type="digit" value="{{userInfo.weight}}" 
+              bindinput="onWeightInput" placeholder="请输入体重"/>
       </view>
     </view>
-    <view class="bmi-tip">
-      <text class="tip-text">
-        {{bmiLevel === 'underweight' ? '💡 建议适当增加营养摄入' : 
-          bmiLevel === 'normal' ? '🎉 保持得很好，继续维持健康习惯' :
-          bmiLevel === 'overweight' ? '💪 建议适当控制饮食和增加运动' :
-          '🏃 建议制定科学的减重计划'}}
-      </text>
-    </view>
-  </view>
 
-  <view class="section">
-    <view class="section-title">健康目标</view>
-    <view class="goal-options">
-      <!-- 增肌增重选项 -->
-      <view class="goal-item {{userInfo.goal === 'gain' ? 'selected' : ''}}" 
-            bindtap="selectGoal" data-goal="gain">
-        <view class="goal-check">{{userInfo.goal === 'gain' ? '✓' : ''}}</view>
-        <view class="goal-content">
-          <text class="goal-text">增肌增重</text>
-          <text class="goal-recommend" wx:if="{{bmi && isRecommendedGoal('gain')}}">(推荐)</text>
+    <!-- BMI显示区域 -->
+    <view class="bmi-section" wx:if="{{bmi}}">
+      <view class="bmi-header">
+        <text class="bmi-title">BMI计算结果</text>
+      </view>
+      <view class="bmi-content">
+        <view class="bmi-value">
+          <text class="bmi-number">{{bmi}}</text>
+          <text class="bmi-unit">kg/m²</text>
+        </view>
+        <view class="bmi-status">
+          <text class="status-text">{{bmiStatus}}</text>
+          <view class="status-indicator {{bmiLevel}}"></view>
+        </view>
+      </view>
+      <view class="bmi-tip">
+        <text class="tip-text">
+          {{bmiLevel === 'underweight' ? '💡 建议适当增加营养摄入' : 
+            bmiLevel === 'normal' ? '🎉 保持得很好，继续维持健康习惯' :
+            bmiLevel === 'overweight' ? '💪 建议适当控制饮食和增加运动' :
+            '🏃 建议制定科学的减重计划'}}
+        </text>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">健康目标</view>
+      <view class="goal-options">
+        <!-- 增肌增重选项 -->
+        <view class="goal-item {{userInfo.goal === 'gain' ? 'selected' : ''}}" 
+              bindtap="selectGoal" data-goal="gain">
+          <view class="goal-check">{{userInfo.goal === 'gain' ? '✓' : ''}}</view>
+          <view class="goal-content">
+            <text class="goal-text">增肌增重</text>
+            <text class="goal-recommend" wx:if="{{bmi && isRecommendedGoal('gain')}}">(推荐)</text>
+          </view>
+        </view>
+        
+        <!-- 减脂瘦身选项 -->
+        <view class="goal-item {{userInfo.goal === 'lose' ? 'selected' : ''}}" 
+              bindtap="selectGoal" data-goal="lose">
+          <view class="goal-check">{{userInfo.goal === 'lose' ? '✓' : ''}}</view>
+          <view class="goal-content">
+            <text class="goal-text">减脂瘦身</text>
+            <text class="goal-recommend" wx:if="{{bmi && isRecommendedGoal('lose')}}">(推荐)</text>
+          </view>
+        </view>
+        
+        <!-- 健康维持选项 -->
+        <view class="goal-item {{userInfo.goal === 'maintain' ? 'selected' : ''}}" 
+              bindtap="selectGoal" data-goal="maintain">
+          <view class="goal-check">{{userInfo.goal === 'maintain' ? '✓' : ''}}</view>
+          <view class="goal-content">
+            <text class="goal-text">健康维持</text>
+            <text class="goal-recommend" wx:if="{{bmi && isRecommendedGoal('maintain')}}">(推荐)</text>
+          </view>
         </view>
       </view>
       
-      <!-- 减脂瘦身选项 -->
-      <view class="goal-item {{userInfo.goal === 'lose' ? 'selected' : ''}}" 
-            bindtap="selectGoal" data-goal="lose">
-        <view class="goal-check">{{userInfo.goal === 'lose' ? '✓' : ''}}</view>
-        <view class="goal-content">
-          <text class="goal-text">减脂瘦身</text>
-          <text class="goal-recommend" wx:if="{{bmi && isRecommendedGoal('lose')}}">(推荐)</text>
-        </view>
-      </view>
-      
-      <!-- 健康维持选项 -->
-      <view class="goal-item {{userInfo.goal === 'maintain' ? 'selected' : ''}}" 
-            bindtap="selectGoal" data-goal="maintain">
-        <view class="goal-check">{{userInfo.goal === 'maintain' ? '✓' : ''}}</view>
-        <view class="goal-content">
-          <text class="goal-text">健康维持</text>
-          <text class="goal-recommend" wx:if="{{bmi && isRecommendedGoal('maintain')}}">(推荐)</text>
-        </view>
-      </view>
+      <!-- 推荐说明 -->
+      <view class="recommend-tip" wx:if="{{bmi}}">
+    <text class="tip-icon">💡</text>
+    <text class="tip-text">
+      根据您的BMI {{bmi}} ({{bmiStatus}})，系统推荐您选择
+      <text class="highlight">{{recommendedGoalText}}</text>
+      目标
+    </text>
     </view>
-    
-    <!-- 推荐说明 -->
-    <view class="recommend-tip" wx:if="{{bmi}}">
-  <text class="tip-icon">💡</text>
-  <text class="tip-text">
-    根据您的BMI {{bmi}} ({{bmiStatus}})，系统推荐您选择
-    <text class="highlight">{{recommendedGoalText}}</text>
-    目标
-  </text>
-  </view>
-  </view>
+    </view>
 
-  <view class="action-section">
-    <button class="save-btn" bindtap="saveProfile">保存信息</button>
+    <view class="action-section">
+      <button class="save-btn" bindtap="saveProfile">保存信息</button>
+    </view>
   </view>
-</view>
