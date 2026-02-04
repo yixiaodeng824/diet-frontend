@@ -30,7 +30,7 @@ Page({
       // 上传文件
       const uploadRes = await new Promise((resolve, reject) => {
         wx.uploadFile({
-          url: getApp().globalData.baseUrl + '/analyze',
+          url: getApp().globalData.baseUrl + '/detect',
           filePath: filePath,
           name: 'image',
           success: resolve,
