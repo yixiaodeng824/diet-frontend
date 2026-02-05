@@ -14,7 +14,14 @@
       </view>
       <view class="card-arrow">→</view>
     </view>
-
+    <view class="card" bindtap="goToToday">
+      <view class="card-icon">📅</view>
+      <view class="card-content">
+        <text class="card-title">今日饮食</text>
+        <text class="card-desc">查看今日进食与营养统计</text>
+      </view>
+      <view class="card-arrow">→</view>
+    </view>
     <view class="card" bindtap="goToRecommendation">
       <view class="card-icon">🍽️</view>
       <view class="card-content">

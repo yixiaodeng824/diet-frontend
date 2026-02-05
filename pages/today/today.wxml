@@ -1,0 +1,31 @@
+<view class="container">
+  <view class="summary-section">
+    <view class="summary-title">今日营养总览</view>
+    <view class="summary-item">热量：{{nutritionSum.calories}} 大卡</view>
+    <view class="summary-item">蛋白质：{{nutritionSum.protein}} g</view>
+    <view class="summary-item">碳水：{{nutritionSum.carbs}} g</view>
+    <view class="summary-item">脂肪：{{nutritionSum.fat}} g</view>
+  </view>
+
+  <view class="records-section">
+    <view class="records-title">进食明细</view>
+    <block wx:if="{{records.length}}">
+      <block wx:for="{{records}}" wx:key="time">
+        <view class="record-card">
+          <view class="record-row">
+            <text class="food-name">{{item.food_name}}</text>
+            <text class="record-time">{{item.time}}</text>
+          </view>
+          <view class="record-row">
+            <text>热量: {{item.calories}} 大卡</text>
+            <text>蛋白质: {{item.protein}}g</text>
+            <text>碳水: {{item.carbs}}g</text>
+            <text>脂肪: {{item.fat}}g</text>
+          </view>
+        </view>
+        <button size="mini" data-id="{{item.id}}" bindtap="deleteRecord">删除</button>
+      </block>
+    </block>
+    <view wx:else class="empty-tip">今日暂无进食记录</view>
+  </view>
+</view>

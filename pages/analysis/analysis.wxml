@@ -3,7 +3,6 @@
   <view class="upload-section">
     <text class="title">拍照计算卡路里</text>
     <text class="subtitle">上传食物图片，AI自动分析营养成分</text>
-    
     <view class="image-upload" bindtap="chooseImage">
       <image wx:if="{{imageUrl}}" src="{{imageUrl}}" class="preview-image"></image>
       <view wx:else class="upload-placeholder">
@@ -11,36 +10,38 @@
         <text class="upload-text">点击选择图片</text>
       </view>
     </view>
-
     <button class="upload-btn" bindtap="chooseImage" disabled="{{isLoading}}">
       {{isLoading ? '分析中...' : '选择图片'}}
     </button>
   </view>
 
-  <!-- 分析结果 -->
-  <view class="result-section" wx:if="{{analysisResult}}">
-    <view class="result-title">分析结果</view>
+ <!-- 分析结果 -->
+<view class="result-section" wx:if="{{analysisResult && analysisResult.length}}">
+  <view class="result-title">分析结果</view>
+  <block wx:for="{{analysisResult}}" wx:key="foodName">
     <view class="result-card">
       <view class="result-item">
         <text class="label">食物名称:</text>
-        <text class="value">{{analysisResult.foodName}}</text>
+        <text class="value">{{item.foodName}}</text>
       </view>
       <view class="result-item">
         <text class="label">热量:</text>
-        <text class="value">{{analysisResult.calories}} 大卡</text>
+        <text class="value">{{item.calories}} 大卡</text>
       </view>
       <view class="result-item">
         <text class="label">蛋白质:</text>
-        <text class="value">{{analysisResult.protein}}g</text>
+        <text class="value">{{item.protein}}g</text>
       </view>
       <view class="result-item">
         <text class="label">碳水化合物:</text>
-        <text class="value">{{analysisResult.carbs}}g</text>
+        <text class="value">{{item.carbs}}g</text>
       </view>
       <view class="result-item">
         <text class="label">脂肪:</text>
-        <text class="value">{{analysisResult.fat}}g</text>
+        <text class="value">{{item.fat}}g</text>
       </view>
     </view>
-  </view>
+  </block>
+  <button bindtap="saveToTodayRecord" type="primary" style="margin-top:30rpx;">保存到今日饮食</button>
 </view>
+</view> 

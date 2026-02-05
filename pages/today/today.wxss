@@ -1,0 +1,59 @@
+/* pages/today/today.wxss */
+.container {
+  padding: 40rpx;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+.summary-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+.summary-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+.summary-item {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+.records-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+}
+.records-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+.record-card {
+  border-bottom: 1rpx solid #eee;
+  padding: 20rpx 0;
+}
+.record-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24rpx;
+  color: #444;
+  margin-bottom: 8rpx;
+}
+.food-name {
+  font-weight: bold;
+  color: #07c160;
+}
+.record-time {
+  color: #999;
+  font-size: 22rpx;
+}
+.empty-tip {
+  text-align: center;
+  color: #bbb;
+  font-size: 26rpx;
+  margin-top: 40rpx;
+}

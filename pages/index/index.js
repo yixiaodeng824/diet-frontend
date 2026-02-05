@@ -26,7 +26,11 @@ Page({
       url: '/pages/analysis/analysis'
     });
   },
-
+  goToToday() {
+    wx.navigateTo({
+      url: '/pages/today/today'
+    });
+  },
   // 跳转到推荐页面
   goToRecommendation() {
     if (!this.data.userInfo || !this.data.userInfo.goal) {

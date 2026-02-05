@@ -4,7 +4,8 @@
     "pages/index/index",
     "pages/profile/profile",
     "pages/analysis/analysis",
-    "pages/recommendation/recommendation"
+    "pages/recommendation/recommendation",
+    "pages/today/today"
   ],
   "window": {
     "navigationBarTitleText": "膳食健康助手",

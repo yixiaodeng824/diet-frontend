@@ -21,13 +21,11 @@ Page({
   },
 
   // 上传图片到后端
+// 上传图片到后端
   async uploadImage(filePath) {
     this.setData({ isLoading: true });
-    
     try {
       wx.showLoading({ title: '分析中...' });
-      
-      // 上传文件
       const uploadRes = await new Promise((resolve, reject) => {
         wx.uploadFile({
           url: getApp().globalData.baseUrl + '/detect',
@@ -37,10 +35,9 @@ Page({
           fail: reject
         });
       });
-
       const result = JSON.parse(uploadRes.data);
-      
       if (result.success) {
+        // 这里 result.data 是数组
         this.setData({
           analysisResult: result.data,
           isLoading: false
@@ -58,6 +55,54 @@ Page({
         icon: 'none'
       });
     }
+  },
+  saveToTodayRecord() {
+    const app = getApp();
+    const userInfo = app.globalData.userInfo || {};
+    const food = this.data.analysisResult;
+    if (!food) return;
+  
+    wx.showLoading({ title: '保存中...' });
+    app.request('/record/add', {
+      user_id: userInfo.name || 'default',
+      foods: [{
+        name: food.foodName,
+        calories: food.calories,
+        protein: food.protein,
+        carbs: food.carbs,
+        fat: food.fat
+      }]
+    }).then(res => {
+      wx.hideLoading();
+      wx.showToast({ title: '已保存到今日饮食', icon: 'success' });
+    }).catch(err => {
+      wx.hideLoading();
+      wx.showToast({ title: '保存失败', icon: 'none' });
+    });
+  },
+  saveToTodayRecord() {
+    const app = getApp();
+    const userInfo = app.globalData.userInfo || {};
+    const foods = this.data.analysisResult;
+    if (!foods || !foods.length) return;
+
+    wx.showLoading({ title: '保存中...' });
+    app.request('/record/add', {
+      user_id: userInfo.name || 'default',
+      foods: foods.map(food => ({
+        name: food.foodName,
+        calories: food.calories,
+        protein: food.protein,
+        carbs: food.carbs,
+        fat: food.fat
+      }))
+    }).then(res => {
+      wx.hideLoading();
+      wx.showToast({ title: '已保存到今日饮食', icon: 'success' });
+    }).catch(err => {
+      wx.hideLoading();
+      wx.showToast({ title: '保存失败', icon: 'none' });
+    });
   },
 
   // 其他生命周期函数保持不变
