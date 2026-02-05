@@ -3,10 +3,6 @@
     <view class="section">
       <view class="section-title">基本信息</view>
       <view class="input-item">
-        <text class="label">姓名</text>
-        <input class="input-field" value="{{userInfo.name}}" disabled placeholder="请输入姓名"/>
-      </view>
-      <view class="input-item">
         <text class="label">身高(cm)</text>
         <input class="input-field" type="digit" value="{{userInfo.height}}" 
               bindinput="onHeightInput" placeholder="请输入身高"/>

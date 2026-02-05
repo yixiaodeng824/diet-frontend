@@ -2,46 +2,94 @@
 Page({
   data: {
     userInfo: {
-      name: '',
       height: '',
       weight: '',
-      goal: '',
-      bmi: '',
-      bmiStatus: '',
-      bmiLevel: '',
-      recommendedGoalText: ''
+      goal: ''
     },
     bmi: '',
     bmiStatus: '',
-    bmiLevel: '' // 新增：BMI等级，用于推荐判断
+    bmiLevel: ''
   },
 
   onLoad() {
+    this.loadUserInfo();
+  },
+
+  onShow() {
+    this.loadUserInfo();
+  },
+
+  loadUserInfo() {
     const app = getApp();
-    const globalUserInfo = app.globalData.userInfo;
-    
-    if (globalUserInfo) {
-      this.setData({
-        userInfo: {
-          name: globalUserInfo.name || '',
-          height: globalUserInfo.height || '',
-          weight: globalUserInfo.weight || '',
-          goal: globalUserInfo.goal || ''
+    let globalUserInfo = app.globalData.userInfo || {};
+    // 本地缓存兜底
+    if (!globalUserInfo.user_id) {
+      const localUserInfo = wx.getStorageSync('userInfo') || {};
+      if (localUserInfo.user_id) {
+        globalUserInfo = { ...globalUserInfo, user_id: localUserInfo.user_id };
+        console.log('[日志] profile.js loadUserInfo: 使用本地缓存 user_id 兜底', localUserInfo.user_id);
+      }
+    }
+    console.log('[日志] profile.js loadUserInfo: globalUserInfo', globalUserInfo);
+    if (globalUserInfo.user_id) {
+      app.request('/user/info', { user_id: globalUserInfo.user_id }, 'GET').then(res => {
+        console.log('[日志] profile.js loadUserInfo: /user/info 返回', res);
+        if (res.success) {
+          const mergedUserInfo = {
+            user_id: globalUserInfo.user_id,
+            height: res.height || '',
+            weight: res.weight || '',
+            goal: res.goal || globalUserInfo.goal || ''
+          };
+          console.log('[日志] profile.js loadUserInfo: mergedUserInfo', mergedUserInfo);
+          this.setData({ userInfo: mergedUserInfo });
+          app.saveUserInfo(mergedUserInfo);
+          if (res.height && res.weight) {
+            this.calculateBMI();
+          }
+        } else {
+          // 合并 user_id，防止丢失
+          this.setData({
+            userInfo: {
+              ...globalUserInfo,
+              user_id: (app.globalData.userInfo && app.globalData.userInfo.user_id) || globalUserInfo.user_id
+            }
+          });
+          console.warn('[日志] profile.js loadUserInfo: /user/info 失败，使用 globalUserInfo', globalUserInfo);
         }
       });
-      
-      if (globalUserInfo.height && globalUserInfo.weight) {
-        this.calculateBMI();
+    } else {
+      // 只赋值一次回调，回调后立即清除
+      if (!wx.$userInfoReadyCallback) {
+        wx.$userInfoReadyCallback = () => {
+          const app = getApp();
+          const globalUserInfo = app.globalData.userInfo || {};
+          console.log('[日志] profile.js userInfoReadyCallback 执行，globalUserInfo:', globalUserInfo);
+          wx.$userInfoReadyCallback = null;
+          // 直接 setData，确保 user_id 不丢失
+          this.setData({
+            userInfo: {
+              ...this.data.userInfo,
+              user_id: globalUserInfo.user_id
+            }
+          });
+          // 再次尝试加载用户信息
+          this.loadUserInfo();
+        };
+        console.warn('[日志] profile.js loadUserInfo: user_id 不存在，等待回调');
       }
     }
   },
 
   onHeightInput(e) {
     const height = e.detail.value;
+    // 保留 user_id 字段
     this.setData({
-      'userInfo.height': height
+      userInfo: {
+        ...this.data.userInfo,
+        height: height
+      }
     });
-    
     if (height && this.data.userInfo.weight) {
       this.calculateBMI();
     }
@@ -49,10 +97,13 @@ Page({
 
   onWeightInput(e) {
     const weight = e.detail.value;
+    // 保留 user_id 字段
     this.setData({
-      'userInfo.weight': weight
+      userInfo: {
+        ...this.data.userInfo,
+        weight: weight
+      }
     });
-    
     if (weight && this.data.userInfo.height) {
       this.calculateBMI();
     }
@@ -60,8 +111,12 @@ Page({
 
   selectGoal(e) {
     const goal = e.currentTarget.dataset.goal;
+    // 保留 user_id 字段
     this.setData({
-      'userInfo.goal': goal
+      userInfo: {
+        ...this.data.userInfo,
+        goal: goal
+      }
     });
   },
 
@@ -149,8 +204,20 @@ isRecommendedGoal(goal) {
 },
 
   saveProfile() {
-    const userInfo = this.data.userInfo;
-    
+    const app = getApp();
+    // 本地缓存兜底获取 user_id
+    let user_id = (app.globalData.userInfo && app.globalData.userInfo.user_id) || this.data.userInfo.user_id;
+    if (!user_id) {
+      const localUserInfo = wx.getStorageSync('userInfo') || {};
+      if (localUserInfo.user_id) {
+        user_id = localUserInfo.user_id;
+        console.log('[日志] saveProfile: 使用本地缓存 user_id 兜底', user_id);
+      }
+    }
+    const userInfo = {
+      ...this.data.userInfo,
+      user_id: user_id
+    };
     if (!userInfo.height || !userInfo.weight) {
       wx.showToast({
         title: '请填写身高体重',
@@ -158,7 +225,6 @@ isRecommendedGoal(goal) {
       });
       return;
     }
-    
     if (!userInfo.goal) {
       wx.showToast({
         title: '请选择健康目标',
@@ -166,10 +232,30 @@ isRecommendedGoal(goal) {
       });
       return;
     }
-
-    const app = getApp();
-    app.saveUserInfo(userInfo);
-    
+    const globalUserInfo = app.globalData.userInfo || {};
+    const mergedUserInfo = {
+      user_id: userInfo.user_id,
+      height: userInfo.height,
+      weight: userInfo.weight,
+      goal: userInfo.goal
+    };
+    console.log('[日志] saveProfile: user_id', mergedUserInfo.user_id);
+    if (!mergedUserInfo.user_id) {
+      wx.showToast({
+        title: '用户ID未获取，无法保存',
+        icon: 'none'
+      });
+      console.warn('[日志] saveProfile: user_id 缺失', mergedUserInfo);
+      return;
+    }
+    app.saveUserInfo(mergedUserInfo);
+    this.setData({ userInfo: mergedUserInfo });
+    // 同步保存到后端
+    app.request('/user/update', {
+      user_id: mergedUserInfo.user_id,
+      height: mergedUserInfo.height,
+      weight: mergedUserInfo.weight
+    }, 'POST');
     wx.showToast({
       title: '保存成功',
       icon: 'success',

@@ -1,3 +1,4 @@
+ 
 // pages/recommendation/recommendation.js
 Page({
   data: {
@@ -6,37 +7,69 @@ Page({
     recommendation: '',
     isLoading: false
   },
-
+  // 等待 userInfo 加载完成后再 setData
+  onShow() {
+    this.waitForUserInfo();
+  },
   onLoad() {
+    this.waitForUserInfo();
+  },
+
+  // 封装等待 userInfo 的方法，确保所有页面操作都在 userInfo 加载后
+  waitForUserInfo() {
     const app = getApp();
-    const userInfo = app.globalData.userInfo;
     const goalMap = {
       'gain': '增肌',
       'lose': '减脂',
       'maintain': '健康维持'
     };
-    
-    this.setData({
-      userInfo: userInfo,
-      goalText: goalMap[userInfo.goal] || ''
-    });
+    const setUserInfo = () => {
+      const userInfo = app.globalData.userInfo;
+      console.log('[日志] userInfo 加载:', userInfo);
+      if (userInfo && userInfo.user_id) {
+        this.setData({
+          userInfo: userInfo,
+          goalText: goalMap[userInfo.goal] || ''
+        });
+      } else {
+        wx.showToast({ title: '用户ID未获取，稍后重试', icon: 'none' });
+      }
+    };
+    if (app.globalData.userInfo && app.globalData.userInfo.user_id) {
+      setUserInfo();
+    } else {
+      wx.$userInfoReadyCallback = () => {
+        setUserInfo();
+      };
+    }
   },
 
   // 连接后端的AI推荐
   async generateRecommendation() {
     if (this.data.isLoading) return;
-    
+    if (!this.data.userInfo || !this.data.userInfo.user_id) {
+      wx.showToast({ title: '用户ID未获取，无法推荐', icon: 'none' });
+      console.warn('[日志] generateRecommendation: user_id 缺失', this.data.userInfo);
+      return;
+    }
+    console.log('[日志] generateRecommendation: user_id', this.data.userInfo.user_id);
     this.setData({ isLoading: true });
     wx.showLoading({ title: 'AI思考中...' });
 
     try {
+      // 只在首次或用户主动修改身高体重时，调用用户信息保存接口
+      if (this.data.userInfo.height && this.data.userInfo.weight && this.data.userInfo.needUpdateInfo) {
+        await getApp().request('/user/update', {
+          user_id: this.data.userInfo.user_id,
+          height: this.data.userInfo.height,
+          weight: this.data.userInfo.weight
+        });
+      }
+      // 推荐接口只需传openid（user_id）和goal
       const result = await getApp().request('/recommend', {
-        goal: this.data.userInfo.goal,
-        bmi: this.data.userInfo.bmi,
-        height: this.data.userInfo.height,
-        weight: this.data.userInfo.weight
+        user_id: this.data.userInfo.user_id,
+        goal: this.data.userInfo.goal
       });
-
       if (result.success) {
         this.setData({
           recommendation: result.data.recommendation,
@@ -47,7 +80,6 @@ Page({
       }
     } catch (error) {
       console.error('获取推荐失败:', error);
-      // 失败时使用本地备选方案
       this.useLocalRecommendation();
     } finally {
       wx.hideLoading();
@@ -72,11 +104,11 @@ Page({
       ]
     };
 
-    const goalRecs = recommendations[this.data.userInfo.goal] || [];
+    const userInfo = this.data.userInfo || {};
+    const goalRecs = recommendations[userInfo.goal] || [];
     const randomIndex = Math.floor(Math.random() * goalRecs.length);
-    
     this.setData({
-      recommendation: goalRecs[randomIndex]
+      recommendation: goalRecs[randomIndex] || '暂无推荐，请稍后重试'
     });
   }
 })

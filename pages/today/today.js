@@ -12,7 +12,7 @@ Page({
     const app = getApp();
     const userInfo = app.globalData.userInfo || {};
     this.setData({ isLoading: true });
-    app.request('/record/today?user_id=' + (userInfo.name || 'default'), {}, 'GET')
+    app.request('/record/today?user_id=' + userInfo.user_id, {}, 'GET')
       .then(res => {
         if (res.success) {
           // 格式化总览数据

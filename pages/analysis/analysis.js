@@ -64,7 +64,7 @@ Page({
   
     wx.showLoading({ title: '保存中...' });
     app.request('/record/add', {
-      user_id: userInfo.name || 'default',
+      user_id: userInfo.user_id,
       foods: [{
         name: food.foodName,
         calories: food.calories,
@@ -88,7 +88,7 @@ Page({
 
     wx.showLoading({ title: '保存中...' });
     app.request('/record/add', {
-      user_id: userInfo.name || 'default',
+      user_id: userInfo.user_id,
       foods: foods.map(food => ({
         name: food.foodName,
         calories: food.calories,

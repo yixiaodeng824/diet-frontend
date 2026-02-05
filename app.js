@@ -1,11 +1,44 @@
 // app.js
 App({
   onLaunch() {
-    // 小程序启动时从本地缓存读取用户信息
-    const userInfo = wx.getStorageSync('userInfo');
-    if (userInfo) {
-      this.globalData.userInfo = userInfo;
-    }
+    const that = this;
+    // 先尝试读取本地 userInfo
+    let userInfo = wx.getStorageSync('userInfo') || {};
+    console.log('[日志] app.js onLaunch: 本地 userInfo', userInfo);
+    // 启动时同步 globalData，无论 user_id 是否存在都赋值
+    this.globalData.userInfo = userInfo;
+    console.log('[日志] app.js onLaunch: globalData.userInfo 已赋值', this.globalData.userInfo);
+    // 微信登录获取 openid
+    wx.login({
+      success: (res) => {
+        console.log('[日志] wx.login 成功，code:', res.code);
+        if (res.code) {
+          that.request('/wxlogin', { code: res.code }, 'POST').then(result => {
+            console.log('[日志] /wxlogin 返回:', result);
+            if (result.success && result.openid) {
+              userInfo.user_id = result.openid;
+              that.saveUserInfo(userInfo);
+              // 立即同步 globalData
+              that.globalData.userInfo = userInfo;
+              console.log('[日志] app.js onLaunch: user_id 已赋值', userInfo.user_id);
+              // 通知所有页面 userInfo 已加载
+              wx.$userInfoReady = true;
+              if (typeof wx.$userInfoReadyCallback === 'function') {
+                console.log('[日志] app.js wx.$userInfoReadyCallback 执行，userInfo:', userInfo);
+                wx.$userInfoReadyCallback(userInfo);
+              }
+            } else {
+              console.warn('[日志] /wxlogin 未返回 openid 或 success=false', result);
+            }
+          }).catch(err => {
+            console.error('[日志] /wxlogin 请求失败', err);
+          });
+        }
+      },
+      fail: (err) => {
+        console.error('[日志] wx.login失败', err);
+      }
+    });
   },
 
   // 全局数据
@@ -16,8 +49,11 @@ App({
 
   // 保存用户信息方法
   saveUserInfo(userInfo) {
-    this.globalData.userInfo = userInfo;
-    wx.setStorageSync('userInfo', userInfo);
+    // 合并本地已有 userInfo，避免字段丢失
+    const oldUserInfo = wx.getStorageSync('userInfo') || {};
+    const mergedUserInfo = { ...oldUserInfo, ...userInfo };
+    this.globalData.userInfo = mergedUserInfo;
+    wx.setStorageSync('userInfo', mergedUserInfo);
   },
 
   // 统一的网络请求方法
