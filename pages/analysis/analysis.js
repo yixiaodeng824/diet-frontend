@@ -2,8 +2,13 @@
 Page({
   data: {
     imageUrl: '',
-    analysisResult: null,
-    isLoading: false
+    isLoading: false,
+    // YOLO 识别结果
+    yoloResult: null,
+    // DeepSeek 百科结果
+    deepseekResult: null,
+    // 是否已配置 DeepSeek Key（降级提示）
+    deepseekUnavailable: false,
   },
 
   // 选择图片
@@ -15,87 +20,73 @@ Page({
       success: (res) => {
         const tempFilePath = res.tempFilePaths[0];
         this.setData({ imageUrl: tempFilePath });
-        this.uploadImage(tempFilePath);
+        this.uploadAndDetect(tempFilePath);
       }
     });
   },
 
-  // 上传图片到后端
-// 上传图片到后端
-  async uploadImage(filePath) {
-    this.setData({ isLoading: true });
+  // 上传 → YOLO 识别 → DeepSeek 百科（一次性返回）
+  async uploadAndDetect(filePath) {
+    this.setData({
+      isLoading: true,
+      yoloResult: null,
+      deepseekResult: null,
+      deepseekUnavailable: false,
+    });
+
     try {
-      wx.showLoading({ title: '分析中...' });
+      wx.showLoading({ title: '分析中...', mask: true });
+
       const uploadRes = await new Promise((resolve, reject) => {
         wx.uploadFile({
-          url: getApp().globalData.baseUrl + '/detect',
+          url: getApp().globalData.baseUrl + '/detect/deepseek',
           filePath: filePath,
           name: 'image',
           success: resolve,
-          fail: reject
+          fail: reject,
         });
       });
+
       const result = JSON.parse(uploadRes.data);
-      if (result.success) {
-        // 这里 result.data 是数组
-        this.setData({
-          analysisResult: result.data,
-          isLoading: false
-        });
-        wx.hideLoading();
-      } else {
-        throw new Error(result.message);
+
+      if (!result.success) {
+        throw new Error(result.message || '识别失败');
       }
+
+      this.setData({
+        yoloResult: result.yolo_result,
+        deepseekResult: result.deepseek_result,
+        deepseekUnavailable: result.deepseek_result === null,
+      });
+
+      wx.hideLoading();
+
     } catch (error) {
       console.error('分析失败:', error);
-      this.setData({ isLoading: false });
       wx.hideLoading();
-      wx.showToast({
-        title: '分析失败，请重试',
-        icon: 'none'
-      });
+      wx.showToast({ title: '分析失败，请重试', icon: 'none' });
+    } finally {
+      this.setData({ isLoading: false });
     }
   },
+
+  // 保存到今日饮食
   saveToTodayRecord() {
     const app = getApp();
     const userInfo = app.globalData.userInfo || {};
-    const food = this.data.analysisResult;
-    if (!food) return;
-  
+    const yolo = this.data.yoloResult;
+    if (!yolo) return;
+
     wx.showLoading({ title: '保存中...' });
     app.request('/record/add', {
       user_id: userInfo.user_id,
       foods: [{
-        name: food.foodName,
-        calories: food.calories,
-        protein: food.protein,
-        carbs: food.carbs,
-        fat: food.fat
-      }]
-    }).then(res => {
-      wx.hideLoading();
-      wx.showToast({ title: '已保存到今日饮食', icon: 'success' });
-    }).catch(err => {
-      wx.hideLoading();
-      wx.showToast({ title: '保存失败', icon: 'none' });
-    });
-  },
-  saveToTodayRecord() {
-    const app = getApp();
-    const userInfo = app.globalData.userInfo || {};
-    const foods = this.data.analysisResult;
-    if (!foods || !foods.length) return;
-
-    wx.showLoading({ title: '保存中...' });
-    app.request('/record/add', {
-      user_id: userInfo.user_id,
-      foods: foods.map(food => ({
-        name: food.foodName,
-        calories: food.calories,
-        protein: food.protein,
-        carbs: food.carbs,
-        fat: food.fat
-      }))
+        name: yolo.food_name,
+        calories: yolo.nutrition.calories,
+        protein: yolo.nutrition.protein,
+        carbs: yolo.nutrition.carbs,
+        fat: yolo.nutrition.fat,
+      }],
     }).then(res => {
       wx.hideLoading();
       wx.showToast({ title: '已保存到今日饮食', icon: 'success' });
@@ -105,7 +96,6 @@ Page({
     });
   },
 
-  // 其他生命周期函数保持不变
   onLoad(options) {},
   onReady() {},
   onShow() {},
@@ -113,5 +103,5 @@ Page({
   onUnload() {},
   onPullDownRefresh() {},
   onReachBottom() {},
-  onShareAppMessage() {}
-})
+  onShareAppMessage() {},
+});

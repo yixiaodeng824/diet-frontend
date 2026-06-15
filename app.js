@@ -44,7 +44,7 @@ App({
   // 全局数据
   globalData: {
     userInfo: null,
-    baseUrl: 'http://192.168.18.66:5000/api' // 替换为你的Flask服务器地址
+    baseUrl: 'http://192.168.31.167:5000/api' // 替换为你的Flask服务器地址
   },
 
   // 保存用户信息方法

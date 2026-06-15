@@ -1,5 +1,5 @@
-<!-- pages/analysis/analysis.wxml -->
 <view class="container">
+  <!-- 上传区域 -->
   <view class="upload-section">
     <text class="title">拍照计算卡路里</text>
     <text class="subtitle">上传食物图片，AI自动分析营养成分</text>
@@ -15,33 +15,84 @@
     </button>
   </view>
 
- <!-- 分析结果 -->
-<view class="result-section" wx:if="{{analysisResult && analysisResult.length}}">
-  <view class="result-title">分析结果</view>
-  <block wx:for="{{analysisResult}}" wx:key="foodName">
+  <!-- YOLO 识别结果：营养卡片 -->
+  <view class="result-section" wx:if="{{yoloResult}}">
+    <view class="result-title">🍽️ 识别结果</view>
     <view class="result-card">
-      <view class="result-item">
-        <text class="label">食物名称:</text>
-        <text class="value">{{item.foodName}}</text>
+      <view class="food-name-row">
+        <text class="food-name">{{yoloResult.food_name}}</text>
+        <text class="confidence">可信度 {{yoloResult.confidence_rate || (yoloResult.confidence * 100).toFixed(0)}}%</text>
       </view>
-      <view class="result-item">
-        <text class="label">热量:</text>
-        <text class="value">{{item.calories}} 大卡</text>
-      </view>
-      <view class="result-item">
-        <text class="label">蛋白质:</text>
-        <text class="value">{{item.protein}}g</text>
-      </view>
-      <view class="result-item">
-        <text class="label">碳水化合物:</text>
-        <text class="value">{{item.carbs}}g</text>
-      </view>
-      <view class="result-item">
-        <text class="label">脂肪:</text>
-        <text class="value">{{item.fat}}g</text>
+      <view class="nutrition-grid">
+        <view class="nutrition-item">
+          <text class="num">{{yoloResult.nutrition.calories}}</text>
+          <text class="unit">大卡</text>
+          <text class="label">热量</text>
+        </view>
+        <view class="nutrition-item">
+          <text class="num">{{yoloResult.nutrition.protein}}</text>
+          <text class="unit">g</text>
+          <text class="label">蛋白质</text>
+        </view>
+        <view class="nutrition-item">
+          <text class="num">{{yoloResult.nutrition.carbs}}</text>
+          <text class="unit">g</text>
+          <text class="label">碳水</text>
+        </view>
+        <view class="nutrition-item">
+          <text class="num">{{yoloResult.nutrition.fat}}</text>
+          <text class="unit">g</text>
+          <text class="label">脂肪</text>
+        </view>
       </view>
     </view>
-  </block>
-  <button bindtap="saveToTodayRecord" type="primary" style="margin-top:30rpx;">保存到今日饮食</button>
+
+    <!-- 保存按钮 -->
+    <button bindtap="saveToTodayRecord" type="primary" style="margin-top:30rpx;">
+      保存到今日饮食
+    </button>
+  </view>
+
+  <!-- DeepSeek AI 百科 -->
+  <view class="deepseek-section" wx:if="{{deepseekResult}}">
+    <view class="result-title">🤖 AI 食物百科</view>
+    <view class="deepseek-card">
+      <view wx:if="{{deepseekResult.description}}" class="ds-block">
+        <text class="ds-label">📖 简介</text>
+        <text class="ds-text">{{deepseekResult.description}}</text>
+      </view>
+      <view wx:if="{{deepseekResult.nutrition_benefits}}" class="ds-block">
+        <text class="ds-label">🥗 营养功效</text>
+        <text class="ds-text">{{deepseekResult.nutrition_benefits}}</text>
+      </view>
+      <view wx:if="{{deepseekResult.health_tips}}" class="ds-block">
+        <text class="ds-label">💡 健康建议</text>
+        <text class="ds-text">{{deepseekResult.health_tips}}</text>
+      </view>
+      <view wx:if="{{deepseekResult.calorie_level}}" class="ds-block">
+        <text class="ds-label">🔥 热量等级</text>
+        <text class="ds-tag">{{deepseekResult.calorie_level}}</text>
+      </view>
+      <view wx:if="{{deepseekResult.cooking_methods && deepseekResult.cooking_methods.length}}" class="ds-block">
+        <text class="ds-label">👨‍🍳 推荐做法</text>
+        <view wx:for="{{deepseekResult.cooking_methods}}" wx:key="*this" class="ds-method">
+          <text class="ds-index">{{index + 1}}.</text>
+          <text class="ds-text">{{item}}</text>
+        </view>
+      </view>
+      <view wx:if="{{deepseekResult.pairing_suggestions}}" class="ds-block">
+        <text class="ds-label">🍽️ 搭配推荐</text>
+        <text class="ds-text">{{deepseekResult.pairing_suggestions}}</text>
+      </view>
+      <view wx:if="{{deepseekResult.search_summary}}" class="ds-block">
+        <text class="ds-label">🔍 了解更多</text>
+        <text class="ds-text ds-search">{{deepseekResult.search_summary}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 降级提示：未配置 DeepSeek Key -->
+  <view class="degrade-tip" wx:if="{{deepseekUnavailable}}">
+    <text class="degrade-text">⚠️ 未配置 DeepSeek API Key，仅显示基础营养数据</text>
+  </view>
 </view>
-</view> 
